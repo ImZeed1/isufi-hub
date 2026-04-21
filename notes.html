@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISUFI Hub - Appunti</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="description" content="Libreria risorse ISUFI Hub - Cerca e scarica appunti, riassunti, esercizi e slides.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="https://isufi.unisalento.it/wp-content/uploads/2024/12/Logo-ISUFI.svg" alt="ISUFI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none;">ISUFI Hub<span class="dot">.</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="notes.html" class="nav-link active">Appunti</a>
+        <a href="upload.html" class="nav-link">Carica</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+        <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="nav-notifications" id="nav-notifications" style="display:none;">
+          <button class="btn-icon btn-secondary notifications-bell" id="bell-btn">
+            <i data-lucide="bell"></i>
+            <span class="notifications-badge" id="bell-badge" style="display:none;"></span>
+          </button>
+          <div class="notifications-dropdown" id="notifications-dropdown">
+            <div class="notifications-header">Notifiche</div>
+            <div class="notifications-list" id="notifications-list"></div>
+          </div>
+        </div>
+        <a href="upload.html" class="btn btn-primary nav-cta">Carica appunti &rarr;</a>
+      </div>
+      <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="notes.html" class="nav-link active">Appunti</a>
+    <a href="upload.html" class="nav-link">Carica</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+    <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+  </div>
+
+  <main style="padding: 48px 0;">
+    <div class="container">
+      <div class="fade-up mb-32">
+        <h1 style="margin-bottom:8px;">Libreria Risorse</h1>
+        <p class="small" style="margin:0;">Cerca tra tutti i materiali condivisi dalla community ISUFI.</p>
+      </div>
+
+      <!-- Search bar on notes page -->
+      <div class="search-wrapper mb-40 fade-up" style="max-width:100%;">
+        <i data-lucide="search" class="search-icon"></i>
+        <input type="text" class="search-input" id="notes-search" placeholder="Cerca per titolo, materia, autore, tag…" style="border-radius:var(--radius-md);">
+      </div>
+
+      <div class="notes-layout fade-up" style="transition-delay: 100ms;">
+        <!-- Sidebar Filters -->
+        <aside class="notes-sidebar">
+          <h3 class="mb-24 flex items-center gap-8" style="margin-bottom:20px;">
+            <i data-lucide="sliders-horizontal" style="width:18px;height:18px;color:var(--accent-alt);"></i> Filtri
+          </h3>
+
+          <div class="form-group">
+            <label class="form-label">Area Disciplinare</label>
+            <select class="form-select filter-select" id="filter-area">
+              <option value="all">Tutte le aree</option>
+              <option value="Tecnico-Scientifica">Tecnico-Scientifica</option>
+              <option value="Economico-Giuridica">Economico-Giuridica</option>
+              <option value="Umanistico-Sociale">Umanistico-Sociale</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Anno di Corso</label>
+            <select class="form-select filter-select" id="filter-year">
+              <option value="all">Tutti gli anni</option>
+              <option value="1">1° Anno</option>
+              <option value="2">2° Anno</option>
+              <option value="3">3° Anno</option>
+              <option value="4">4° Anno</option>
+              <option value="5">5° Anno</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tipo di risorsa</label>
+            <select class="form-select filter-select" id="filter-type">
+              <option value="all">Tutti i tipi</option>
+              <option value="Appunti">Appunti</option>
+              <option value="Riassunto">Riassunto</option>
+              <option value="Esercizi">Esercizi</option>
+              <option value="Slides">Slides</option>
+              <option value="Altro">Altro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Anno Accademico</label>
+            <select class="form-select filter-select" id="filter-academic-year">
+              <option value="all">Tutti gli A.A.</option>
+              <option value="2025/26">2025/26</option>
+              <option value="2024/25">2024/25</option>
+              <option value="2023/24">2023/24</option>
+              <option value="2022/23">2022/23</option>
+              <option value="2021/22">2021/22</option>
+              <option value="2020/21">2020/21</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Professore</label>
+            <input type="text" class="form-input filter-input" id="filter-professor" placeholder="Cerca docente..." style="height: 44px; padding: 0 16px;">
+          </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="notes-main">
+          <div class="flex justify-between items-center mb-24 flex-wrap gap-16">
+            <p class="small" style="margin:0;"><span id="notes-count">0</span> risorse trovate</p>
+            <div class="flex items-center gap-8">
+              <label class="small" for="sort-select" style="margin:0;">Ordina per:</label>
+              <select class="form-select" id="sort-select" style="height: 36px; padding: 0 12px; width: auto; font-size: 0.8125rem; border-radius: var(--radius-sm);">
+                <option value="recenti">Più recenti</option>
+                <option value="scaricati">Più scaricati</option>
+                <option value="votati">Più votati</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="notes-grid" class="cards-grid">
+            <!-- Cards injected via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-state.js"></script>
+  <script type="module" src="js/notes.js"></script>
+
+  <!-- Auto-select area filter from URL params -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const area = params.get('area');
+    if (area) {
+      document.addEventListener('DOMContentLoaded', () => {
+        const filterArea = document.getElementById('filter-area');
+        if (filterArea) {
+          filterArea.value = area;
+          filterArea.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+  </script>
+</body>
+</html>

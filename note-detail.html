@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISUFI Hub - Dettaglio Appunto</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="https://isufi.unisalento.it/wp-content/uploads/2024/12/Logo-ISUFI.svg" alt="ISUFI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none;">ISUFI Hub<span class="dot">.</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="notes.html" class="nav-link">Appunti</a>
+        <a href="upload.html" class="nav-link">Carica</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+        <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="nav-notifications" id="nav-notifications" style="display:none;">
+          <button class="btn-icon btn-secondary notifications-bell" id="bell-btn">
+            <i data-lucide="bell"></i>
+            <span class="notifications-badge" id="bell-badge" style="display:none;"></span>
+          </button>
+          <div class="notifications-dropdown" id="notifications-dropdown">
+            <div class="notifications-header">Notifiche</div>
+            <div class="notifications-list" id="notifications-list"></div>
+          </div>
+        </div>
+        <a href="upload.html" class="btn btn-primary nav-cta">Carica appunti &rarr;</a>
+      </div>
+      <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="notes.html" class="nav-link">Appunti</a>
+    <a href="upload.html" class="nav-link">Carica</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+    <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+  </div>
+
+  <main style="padding: 48px 0;">
+    <div class="container" id="note-detail-container">
+      <!-- Content injected via JS -->
+      <div class="text-center" style="padding: 100px 0;">
+        <i data-lucide="loader" class="spin mb-16" style="width:40px;height:40px;color:var(--accent-alt);"></i>
+        <p>Caricamento dettagli...</p>
+      </div>
+    </div>
+  </main>
+
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-state.js"></script>
+  <script type="module" src="js/notes.js"></script>
+  <script type="module" src="js/note-detail.js"></script>
+</body>
+</html>

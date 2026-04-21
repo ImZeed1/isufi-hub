@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISUFI Hub - Home</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="description" content="Piattaforma di condivisione appunti per gli allievi della Scuola Superiore ISUFI - Università del Salento">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="https://isufi.unisalento.it/wp-content/uploads/2024/12/Logo-ISUFI.svg" alt="ISUFI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none;">ISUFI Hub<span class="dot">.</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="notes.html" class="nav-link">Appunti</a>
+        <a href="upload.html" class="nav-link">Carica</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+        <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="nav-notifications" id="nav-notifications" style="display:none;">
+          <button class="btn-icon btn-secondary notifications-bell" id="bell-btn">
+            <i data-lucide="bell"></i>
+            <span class="notifications-badge" id="bell-badge" style="display:none;"></span>
+          </button>
+          <div class="notifications-dropdown" id="notifications-dropdown">
+            <div class="notifications-header">Notifiche</div>
+            <div class="notifications-list" id="notifications-list"></div>
+          </div>
+        </div>
+        <a href="upload.html" class="btn btn-primary nav-cta">Carica appunti &rarr;</a>
+      </div>
+      <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay">
+    <a href="index.html" class="nav-link active">Home</a>
+    <a href="notes.html" class="nav-link">Appunti</a>
+    <a href="upload.html" class="nav-link">Carica</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+    <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+  </div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-pattern" style="padding: 120px 0 80px 0; text-align: center;">
+      <div class="container fade-up">
+        <div class="divider mb-24"></div>
+        <h1 style="max-width: 820px; margin: 0 auto 24px auto;">
+          Gli appunti migliori, condivisi da chi li ha <span class="accent-highlight">scritti.</span>
+        </h1>
+        <p style="font-size: 1.125rem; color: var(--text-muted); max-width: 580px; margin: 0 auto 48px auto; line-height: 1.7;">
+          La piattaforma di knowledge-sharing esclusiva per gli allievi della Scuola Superiore ISUFI.
+        </p>
+
+        <div class="search-wrapper mb-48">
+          <i data-lucide="search" class="search-icon"></i>
+          <input type="text" class="search-input" placeholder="Cerca materia, appunti, area disciplinare…" onclick="window.location.href='notes.html'">
+        </div>
+
+        <div class="flex justify-center gap-16 flex-wrap">
+          <div class="stat-pill">
+            <i data-lucide="file-text" style="width:18px;height:18px;color:var(--accent-alt);"></i>
+            <span class="stat-number" id="stat-notes-count" data-count="0">0</span> appunti
+          </div>
+          <div class="stat-pill">
+            <i data-lucide="layers" style="width:18px;height:18px;color:var(--accent-alt);"></i>
+            <span class="stat-number" id="stat-areas-count" data-count="0">0</span> aree disciplinari
+          </div>
+          <div class="stat-pill">
+            <i data-lucide="users" style="width:18px;height:18px;color:var(--accent-alt);"></i>
+            <span class="stat-number" id="stat-users-count" data-count="0">0</span> allievi
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Aree Disciplinari -->
+    <section style="background-color: var(--bg-card);">
+      <div class="container">
+        <div class="text-center fade-up mb-48">
+          <div class="divider mb-16"></div>
+          <h2>Esplora per Area Disciplinare</h2>
+          <p class="small" style="max-width:480px;margin:0 auto;">Scegli la tua area e trova i materiali più pertinenti al tuo percorso formativo.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;" class="stagger-children">
+
+          <a href="notes.html?area=Tecnico-Scientifica" class="area-card fade-up" data-area="Tecnico-Scientifica">
+            <div class="area-icon">
+              <i data-lucide="flask-conical" style="width:28px;height:28px;"></i>
+            </div>
+            <h3 style="margin-bottom:8px;">Tecnico-Scientifica</h3>
+            <p class="small" style="margin:0;">Ingegneria, Matematica, Fisica, Biologia, Chimica...</p>
+          </a>
+
+          <a href="notes.html?area=Economico-Giuridica" class="area-card fade-up" data-area="Economico-Giuridica">
+            <div class="area-icon">
+              <i data-lucide="scale" style="width:28px;height:28px;"></i>
+            </div>
+            <h3 style="margin-bottom:8px;">Economico-Giuridica</h3>
+            <p class="small" style="margin:0;">Economia, Management, Giurisprudenza...</p>
+          </a>
+
+          <a href="notes.html?area=Umanistico-Sociale" class="area-card fade-up" data-area="Umanistico-Sociale">
+            <div class="area-icon">
+              <i data-lucide="languages" style="width:28px;height:28px;"></i>
+            </div>
+            <h3 style="margin-bottom:8px;">Umanistico-Sociale</h3>
+            <p class="small" style="margin:0;">Lettere, Filosofia, Lingue, Comunicazione, Sociologia...</p>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Aggiunti di Recente -->
+    <section>
+      <div class="container">
+        <div class="flex justify-between items-center mb-48 fade-up">
+          <div>
+            <h2 style="margin:0;">Aggiunti di recente</h2>
+            <p class="small" style="margin:4px 0 0 0;">Le ultime risorse condivise dalla community</p>
+          </div>
+          <a href="notes.html" class="btn btn-ghost">Vedi tutti &rarr;</a>
+        </div>
+
+        <div id="recent-notes-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+          <!-- Cards injected via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section style="background-color: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="container">
+        <div class="text-center fade-up mb-48">
+          <div class="divider mb-16"></div>
+          <h2>Top Contributors</h2>
+          <p class="small" style="max-width:480px;margin:0 auto;">Gli allievi che stanno contribuendo di più alla crescita della community.</p>
+        </div>
+        
+        <div id="leaderboard-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+          <!-- Leaderboard items injected via JS -->
+          <div class="text-center" style="grid-column: 1/-1; padding: 40px;">
+            <i data-lucide="loader" class="spin" style="width:24px;height:24px;color:var(--accent-alt);"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-state.js"></script>
+  <script type="module" src="js/notes.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISUFI Hub - Profilo</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="https://isufi.unisalento.it/wp-content/uploads/2024/12/Logo-ISUFI.svg" alt="ISUFI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none;">ISUFI Hub<span class="dot">.</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="notes.html" class="nav-link">Appunti</a>
+        <a href="upload.html" class="nav-link">Carica</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+        <a href="profile.html" class="nav-link active" id="nav-profile-btn" style="display:none;">Profilo</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="nav-notifications" id="nav-notifications" style="display:none;">
+          <button class="btn-icon btn-secondary notifications-bell" id="bell-btn">
+            <i data-lucide="bell"></i>
+            <span class="notifications-badge" id="bell-badge" style="display:none;"></span>
+          </button>
+          <div class="notifications-dropdown" id="notifications-dropdown">
+            <div class="notifications-header">Notifiche</div>
+            <div class="notifications-list" id="notifications-list"></div>
+          </div>
+        </div>
+        <a href="upload.html" class="btn btn-primary nav-cta">Carica appunti &rarr;</a>
+      </div>
+      <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="notes.html" class="nav-link">Appunti</a>
+    <a href="upload.html" class="nav-link">Carica</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+    <a href="profile.html" class="nav-link active" id="nav-profile-btn" style="display:none;">Profilo</a>
+  </div>
+
+  <main style="padding: 48px 0;">
+    <div class="container">
+      <div class="profile-header fade-up">
+        <div class="profile-avatar"></div>
+        <div class="profile-info">
+          <h1>Caricamento...</h1>
+          <p>Recupero dati profilo</p>
+        </div>
+      </div>
+
+      <div class="fade-up" style="transition-delay: 100ms;">
+        <div class="tabs">
+          <div class="tab active" data-target="favorites">
+            <i data-lucide="bookmark" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"></i> I miei preferiti
+          </div>
+          <div class="tab" data-target="uploads">
+            <i data-lucide="upload" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"></i> I miei caricamenti
+          </div>
+        </div>
+
+        <div class="tab-content active" id="favorites">
+          <div id="favorites-grid" class="cards-grid">
+            <!-- Saved cards injected via JS -->
+          </div>
+          <div id="no-favorites" class="empty-state" style="display:none;">
+            <i data-lucide="bookmark" class="empty-state-icon"></i>
+            <p>Non hai ancora salvato nessun appunto. Esplora la libreria e salva i materiali che ti interessano.</p>
+            <a href="notes.html" class="btn btn-secondary">Esplora Libreria &rarr;</a>
+          </div>
+        </div>
+
+        <div class="tab-content" id="uploads">
+          <div id="uploads-grid" class="cards-grid">
+            <!-- Uploaded cards injected via JS -->
+          </div>
+          <div id="no-uploads" class="empty-state" style="display:none;">
+            <i data-lucide="upload-cloud" class="empty-state-icon"></i>
+            <p>Non hai ancora caricato nessun materiale. Condividi i tuoi appunti con la community!</p>
+            <a href="upload.html" class="btn btn-primary">Carica ora &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-state.js"></script>
+  <script type="module" src="js/notes.js"></script>
+  <script type="module" src="js/profile.js"></script>
+</body>
+</html>

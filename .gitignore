@@ -1,0 +1,9 @@
+.DS_Store
+.gemini/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+db.sqlite3
+/Users/francescopitotti/.gemini/tmp/isufi-hub

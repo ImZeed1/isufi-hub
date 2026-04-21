@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISUFI Hub - About</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="https://isufi.unisalento.it/wp-content/uploads/2024/12/Logo-ISUFI.svg" alt="ISUFI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none;">ISUFI Hub<span class="dot">.</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="notes.html" class="nav-link">Appunti</a>
+        <a href="upload.html" class="nav-link">Carica</a>
+        <a href="about.html" class="nav-link active">About</a>
+        <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+        <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="nav-notifications" id="nav-notifications" style="display:none;">
+          <button class="btn-icon btn-secondary notifications-bell" id="bell-btn">
+            <i data-lucide="bell"></i>
+            <span class="notifications-badge" id="bell-badge" style="display:none;"></span>
+          </button>
+          <div class="notifications-dropdown" id="notifications-dropdown">
+            <div class="notifications-header">Notifiche</div>
+            <div class="notifications-list" id="notifications-list"></div>
+          </div>
+        </div>
+        <a href="upload.html" class="btn btn-primary nav-cta">Carica appunti &rarr;</a>
+      </div>
+      <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="notes.html" class="nav-link">Appunti</a>
+    <a href="upload.html" class="nav-link">Carica</a>
+    <a href="about.html" class="nav-link active">About</a>
+    <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+    <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+  </div>
+
+  <main style="padding: 64px 0;">
+    <div class="container" style="max-width: 800px;">
+
+      <div class="fade-up">
+        <div class="divider mb-16"></div>
+        <h1 class="mb-24">Visione e Origini</h1>
+        <p class="mb-40" style="font-size: 1.125rem; color: var(--text-muted); line-height: 1.8;">
+          Ho ideato ISUFI Hub con l'obiettivo di creare uno strumento concreto per trasformare il modo in cui costruiamo e tramandiamo il sapere all'interno della nostra Scuola.
+        </p>
+      </div>
+
+      <div class="fade-up">
+        <h2 class="mb-16">Oltre l'Archivio: Un'Eredità Condivisa</h2>
+        <p style="line-height:1.9; margin-bottom: 24px;">
+          L'idea alla base di questo progetto è nata da un'esigenza che ho avvertito personalmente durante il mio percorso: fare in modo che l'impegno dedicato allo studio non si esaurisse con la fine di un esame. In un contesto d'eccellenza come l'ISUFI, considero gli appunti non semplici trascrizioni, ma vere e proprie rielaborazioni critiche che riflettono approcci intellettuali unici.
+        </p>
+        <p style="line-height:1.9; margin-bottom: 24px;">
+          Ho immaginato ISUFI Hub come un <strong>ponte intergenerazionale</strong>. Sono convinto che avere accesso ai materiali degli anni precedenti non serva solo a semplificare lo studio, ma permetta un confronto prezioso tra <strong>metodi diversi e approcci differenti</strong>. Osservare come un collega ha affrontato un concetto complesso mi ha spesso aiutato a sviluppare un pensiero più critico, ed è questa ricchezza metodologica che desidero mettere a disposizione di ogni allievo.
+        </p>
+        <p style="line-height:1.9;">
+          Concepisco questo spazio come un ecosistema vivo, dove la community può discutere, correggere e integrare la conoscenza, rendendo l'apprendimento un processo realmente collaborativo, aperto e trasparente.
+        </p>
+      </div>
+
+      <div class="fade-up mt-48">
+        <h2 class="mb-16">Come contribuire</h2>
+        <p style="line-height:1.8;">ISUFI Hub è un progetto open gestito dagli allievi. Oltre a caricare i tuoi appunti tramite l'apposita sezione, puoi contribuire al mantenimento e allo sviluppo della piattaforma, sia a livello di codice che di moderazione dei contenuti. Se sei interessato a far parte del team di gestione, contatta i rappresentanti degli allievi.</p>
+
+        <div class="flex gap-12 mt-24">
+          <a href="upload.html" class="btn btn-primary">Inizia a contribuire &rarr;</a>
+          <a href="notes.html" class="btn btn-secondary">Esplora gli appunti</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-state.js"></script>
+</body>
+</html>

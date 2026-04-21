@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISUFI Hub - Carica Appunti</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="https://isufi.unisalento.it/wp-content/uploads/2024/12/Logo-ISUFI.svg" alt="ISUFI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none;">ISUFI Hub<span class="dot">.</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="notes.html" class="nav-link">Appunti</a>
+        <a href="upload.html" class="nav-link active">Carica</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+        <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="nav-notifications" id="nav-notifications" style="display:none;">
+          <button class="btn-icon btn-secondary notifications-bell" id="bell-btn">
+            <i data-lucide="bell"></i>
+            <span class="notifications-badge" id="bell-badge" style="display:none;"></span>
+          </button>
+          <div class="notifications-dropdown" id="notifications-dropdown">
+            <div class="notifications-header">Notifiche</div>
+            <div class="notifications-list" id="notifications-list"></div>
+          </div>
+        </div>
+        <a href="upload.html" class="btn btn-primary nav-cta">Carica appunti &rarr;</a>
+      </div>
+      <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="notes.html" class="nav-link">Appunti</a>
+    <a href="upload.html" class="nav-link active">Carica</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="login.html" class="nav-link" id="nav-login-btn">Accedi</a>
+    <a href="profile.html" class="nav-link" id="nav-profile-btn" style="display:none;">Profilo</a>
+  </div>
+
+  <main style="padding: 64px 0;">
+    <div class="container">
+      <div class="upload-container fade-up">
+        <div class="text-center mb-40">
+          <div class="divider mb-16"></div>
+          <h2>Condividi la tua conoscenza</h2>
+          <p class="small" style="margin:0;">Segui i passaggi per caricare il tuo materiale.</p>
+        </div>
+
+        <div class="step-progress">
+          <div class="step-indicator active">1</div>
+          <div class="step-indicator">2</div>
+          <div class="step-indicator">3</div>
+          <div class="step-indicator">4</div>
+        </div>
+
+        <form id="upload-form">
+
+          <!-- Step 1: Inquadramento -->
+          <div class="form-step fade-up visible">
+            <h3 class="mb-24 flex items-center gap-8">
+              <i data-lucide="compass" style="width:20px;height:20px;color:var(--accent-alt);"></i> Inquadramento
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Area Disciplinare</label>
+              <select class="form-select" id="upload-area" required>
+                <option value="" disabled selected>Seleziona un'area...</option>
+                <option value="Tecnico-Scientifica">Tecnico-Scientifica</option>
+                <option value="Economico-Giuridica">Economico-Giuridica</option>
+                <option value="Umanistico-Sociale">Umanistico-Sociale</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Materia</label>
+              <select class="form-select" id="upload-materia" disabled required>
+                <option value="" disabled selected>Seleziona prima un'area...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Docente / Professore</label>
+              <input type="text" class="form-input" id="upload-professor" placeholder="Es. Prof. Mario Rossi" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Anno di Corso</label>
+              <select class="form-select" id="upload-year" required>
+                <option value="" disabled selected>Seleziona l'anno...</option>
+                <option value="1">1° Anno</option>
+                <option value="2">2° Anno</option>
+                <option value="3">3° Anno</option>
+                <option value="4">4° Anno</option>
+                <option value="5">5° Anno</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Anno Accademico di stesura</label>
+              <select class="form-select" id="upload-academic-year" required>
+                <option value="" disabled selected>Seleziona l'anno accademico...</option>
+                <option value="2025/26">2025/26</option>
+                <option value="2024/25">2024/25</option>
+                <option value="2023/24">2023/24</option>
+                <option value="2022/23">2022/23</option>
+                <option value="2021/22">2021/22</option>
+                <option value="2020/21">2020/21</option>
+                <option value="Prima del 2020">Prima del 2020</option>
+              </select>
+            </div>
+            <div class="flex justify-end mt-32">
+              <button type="button" class="btn btn-primary btn-next">Avanti &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Tipo risorsa -->
+          <div class="form-step fade-up">
+            <h3 class="mb-24 flex items-center gap-8">
+              <i data-lucide="tag" style="width:20px;height:20px;color:var(--accent-alt);"></i> Tipo di risorsa
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Classificazione</label>
+              <select class="form-select" id="upload-type" required>
+                <option value="" disabled selected>Scegli la tipologia...</option>
+                <option value="Appunti">Appunti completi</option>
+                <option value="Riassunto">Riassunto</option>
+                <option value="Esercizi">Esercizi svolti</option>
+                <option value="Slides">Slides / Presentazioni</option>
+                <option value="Altro">Altro materiale</option>
+              </select>
+            </div>
+            <div class="flex justify-between mt-32">
+              <button type="button" class="btn btn-secondary btn-prev">&larr; Indietro</button>
+              <button type="button" class="btn btn-primary btn-next">Avanti &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Dettagli & File -->
+          <div class="form-step fade-up">
+            <h3 class="mb-24 flex items-center gap-8">
+              <i data-lucide="file-up" style="width:20px;height:20px;color:var(--accent-alt);"></i> Dettagli & File
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Titolo</label>
+              <input type="text" class="form-input" id="upload-title" placeholder="Es. Appunti completi di Analisi II" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">File (PDF, ZIP, DOCX, PPTX - Puoi selezionare più file)</label>
+              <input type="file" id="file-upload" style="display:none;" accept=".pdf,.zip,.docx,.pptx" multiple required>
+              <div class="dropzone" id="dropzone">
+                <i data-lucide="upload-cloud" class="dropzone-icon" style="width:48px;height:48px;"></i>
+                <h3 class="mb-8">Trascina i file qui</h3>
+                <p class="small" style="margin:0;">oppure clicca per selezionarli (Max 50MB per file)</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Descrizione (opzionale)</label>
+              <textarea class="form-textarea" id="upload-description" placeholder="Breve descrizione del contenuto..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sommario / Indice Argomenti (Consigliato per file voluminosi)</label>
+              <textarea class="form-textarea" id="upload-toc" placeholder="Es. 1. Derivate; 2. Integrali; 3. Successioni..." style="min-height:120px;"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tag (separati da virgola)</label>
+              <input type="text" class="form-input" id="upload-tags" placeholder="Es. integrali, serie, convergenza">
+            </div>
+            <div class="flex justify-between mt-32">
+              <button type="button" class="btn btn-secondary btn-prev">&larr; Indietro</button>
+              <button type="button" class="btn btn-primary btn-next">Avanti &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Step 4: Riepilogo -->
+          <div class="form-step fade-up">
+            <h3 class="mb-24 flex items-center gap-8">
+              <i data-lucide="check-circle" style="width:20px;height:20px;color:var(--accent-alt);"></i> Riepilogo
+            </h3>
+            <p class="small mb-24">Controlla i dati prima di procedere. Il materiale è soggetto a revisione per garantirne la qualità.</p>
+
+            <div id="review-summary" style="background-color: var(--bg); padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 32px;">
+              <p class="small" style="margin:0;color:var(--text-muted);">Riepilogo dei dati inseriti...</p>
+            </div>
+
+            <div class="flex justify-between">
+              <button type="button" class="btn btn-secondary btn-prev">&larr; Indietro</button>
+              <button type="submit" class="btn btn-primary">
+                <i data-lucide="upload" style="width:18px;height:18px;"></i> Carica Risorsa
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth-state.js"></script>
+  <script type="module" src="js/upload.js"></script>
+</body>
+</html>

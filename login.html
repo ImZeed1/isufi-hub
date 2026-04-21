@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISUFI Hub - Accedi</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="manifest" href="manifest.json">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="https://isufi.unisalento.it/wp-content/uploads/2024/12/Logo-ISUFI.svg" alt="ISUFI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none;">ISUFI Hub<span class="dot">.</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="notes.html" class="nav-link">Appunti</a>
+        <a href="about.html" class="nav-link">About</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="nav-notifications" id="nav-notifications" style="display:none;">
+          <button class="btn-icon btn-secondary notifications-bell" id="bell-btn">
+            <i data-lucide="bell"></i>
+            <span class="notifications-badge" id="bell-badge" style="display:none;"></span>
+          </button>
+          <div class="notifications-dropdown" id="notifications-dropdown">
+            <div class="notifications-header">Notifiche</div>
+            <div class="notifications-list" id="notifications-list"></div>
+          </div>
+        </div>
+      </div>
+      <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
+    </div>
+  </header>
+
+  <div class="mobile-nav-overlay">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="notes.html" class="nav-link">Appunti</a>
+    <a href="about.html" class="nav-link">About</a>
+  </div>
+
+  <main>
+    <div class="container">
+      <div class="auth-container fade-up">
+        <div class="text-center mb-32">
+          <h2 style="margin-bottom:8px;">Benvenuto su ISUFI Hub</h2>
+          <p class="small" style="margin:0;">Accedi o crea un account per contribuire.</p>
+        </div>
+
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tab-login">Accedi</div>
+          <div class="auth-tab" id="tab-register">Registrati</div>
+        </div>
+
+        <form id="form-login" class="auth-form active">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="login-email" placeholder="allievo@studenti.unisalento.it" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="login-password" placeholder="La tua password" required>
+          </div>
+          <p id="login-error" class="error-message"></p>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+            <i data-lucide="log-in" style="width:16px;height:16px;"></i> Accedi
+          </button>
+        </form>
+
+        <form id="form-register" class="auth-form">
+          <div class="form-group">
+            <label class="form-label">Nickname (visibile agli altri)</label>
+            <input type="text" class="form-input" id="reg-nickname" placeholder="Es. Mario R." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Corso di Laurea</label>
+            <input type="text" class="form-input" id="reg-course" placeholder="Es. Ingegneria Informatica" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="reg-email" placeholder="allievo@studenti.unisalento.it" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="reg-password" placeholder="Minimo 6 caratteri" required minlength="6">
+          </div>
+          <p id="reg-error" class="error-message"></p>
+          <p id="reg-success" style="color: #22C55E; font-size: 0.8125rem; display: none; margin-top: 4px;"></p>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+            <i data-lucide="user-plus" style="width:16px;height:16px;"></i> Crea Account
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>
