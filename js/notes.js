@@ -19,7 +19,7 @@ export const toggleSaveNote = async (e, noteId) => {
 
   const user = await getCurrentUser();
   if (!user) {
-    Toast.warning("Devi accedere per salvare gli appunti nei preferiti.");
+    window.Toast.warning("Devi accedere per salvare gli appunti nei preferiti.");
     setTimeout(() => window.location.href = 'login.html', 1500);
     return;
   }
@@ -42,10 +42,10 @@ export const toggleSaveNote = async (e, noteId) => {
   try {
     if (isCurrentlySaved) {
       await supabase.from('saved_notes').delete().match({ user_id: user.id, note_id: noteId });
-      Toast.info("Rimosso dai preferiti");
+      window.Toast.info("Rimosso dai preferiti");
     } else {
       await supabase.from('saved_notes').insert([{ user_id: user.id, note_id: noteId }]);
-      Toast.success("Salvato nei preferiti!");
+      window.Toast.success("Salvato nei preferiti!");
     }
   } catch (err) {
     // Revert on error
@@ -58,7 +58,7 @@ export const toggleSaveNote = async (e, noteId) => {
       icon.setAttribute('fill', 'none');
       icon.style.color = 'var(--text-muted)';
     }
-    Toast.error("Errore nel salvataggio. Riprova.");
+    window.Toast.error("Errore nel salvataggio. Riprova.");
   }
 };
 
@@ -72,9 +72,9 @@ window.editNote = async (e, noteId, currentTitle) => {
 
   const { error } = await supabase.from('notes').update({ title: newTitle.trim() }).eq('id', noteId);
   if (error) {
-    Toast.error("Errore durante la modifica: " + error.message);
+    window.Toast.error("Errore durante la modifica: " + error.message);
   } else {
-    Toast.success("Titolo aggiornato!");
+    window.Toast.success("Titolo aggiornato!");
     setTimeout(() => window.location.reload(), 800);
   }
 };
@@ -98,15 +98,15 @@ window.deleteNote = async (e, noteId, fileUrl) => {
 
   const { error } = await supabase.from('notes').delete().eq('id', noteId);
   if (error) {
-    Toast.error("Errore durante l'eliminazione: " + error.message);
+    window.Toast.error("Errore durante l'eliminazione: " + error.message);
   } else {
-    Toast.success("Appunto eliminato.");
+    window.Toast.success("Appunto eliminato.");
     setTimeout(() => window.location.reload(), 800);
   }
 };
 
 // Traccia download
-window.trackDownload = async (e, noteId) => {
+export const trackDownload = async (e, noteId) => {
   // Non blocchiamo il click, lasciamo aprire il link
   try {
     // Increment download counter via RPC or manual update

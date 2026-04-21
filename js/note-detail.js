@@ -1,5 +1,5 @@
 import { supabase, getCurrentUser } from './supabase-config.js';
-import { toggleSaveNote } from './notes.js';
+import { toggleSaveNote, trackDownload } from './notes.js';
 
 // Funzione locale per evitare dipendenze che potrebbero fallire
 const getTypeColorClass = (type) => {
@@ -27,18 +27,21 @@ const initNoteDetail = async () => {
       return;
     }
 
-    // 1. Carica utente e suo voto
+    // 1. Carica utente, suo voto e stato salvataggio
     const user = await getCurrentUser();
     let userProfile = null;
     let userRating = 0;
+    let isSaved = false;
 
     if (user) {
-      const [{ data: profile }, { data: rating }] = await Promise.all([
+      const [{ data: profile }, { data: rating }, { data: saved }] = await Promise.all([
         supabase.from('profiles').select('nickname').eq('id', user.id).single(),
-        supabase.from('ratings').select('score').eq('note_id', noteId).eq('user_id', user.id).maybeSingle()
+        supabase.from('ratings').select('score').eq('note_id', noteId).eq('user_id', user.id).maybeSingle(),
+        supabase.from('saved_notes').select('id').eq('user_id', user.id).eq('note_id', noteId).maybeSingle()
       ]);
       userProfile = profile;
       if (rating) userRating = rating.score;
+      if (saved) isSaved = true;
     }
 
     // 2. Carica dettagli appunto
@@ -69,7 +72,7 @@ const initNoteDetail = async () => {
       bundleFiles = bundle || [];
     }
 
-    renderDetail(note, comments || [], bundleFiles, user, userProfile, userRating);
+    renderDetail(note, comments || [], bundleFiles, user, userProfile, userRating, isSaved);
 
   } catch (err) {
     console.error("DEBUG: Errore fatale initNoteDetail:", err);
@@ -77,7 +80,7 @@ const initNoteDetail = async () => {
   }
 };
 
-const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating) => {
+const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating, isSaved) => {
   const container = document.getElementById('note-detail-container');
   const dateStr = new Date(note.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
   const tagsHtml = (note.tags || []).map(tag => `<span class="badge">#${tag}</span>`).join('');
@@ -104,8 +107,8 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
         </div>
         
         <div class="note-actions-fixed">
-          <button class="btn btn-secondary" id="detail-save-btn">
-            <i data-lucide="bookmark"></i> <span>Salva</span>
+          <button class="btn btn-secondary ${isSaved ? 'saved' : ''}" id="detail-save-btn">
+            <i data-lucide="bookmark" ${isSaved ? 'fill="var(--accent-alt)" style="color:var(--accent-alt);"' : ''}></i> <span>${isSaved ? 'Salvato' : 'Salva'}</span>
           </button>
           <a href="${note.file_url}" target="_blank" id="detail-download-btn" class="btn btn-primary">
             <i data-lucide="download"></i> <span>Download PDF</span>
@@ -285,8 +288,14 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
 
 const setupEventListeners = (note, user, userProfile, userRating) => {
   // Save/Download
-  document.getElementById('detail-save-btn').onclick = (e) => toggleSaveNote(e, note.id);
-  document.getElementById('detail-download-btn').onclick = (e) => window.trackDownload?.(e, note.id);
+  document.getElementById('detail-save-btn').onclick = async (e) => {
+    await toggleSaveNote(e, note.id);
+    // Aggiorna il testo del pulsante dopo il toggle
+    const btn = e.currentTarget;
+    const isSaved = btn.classList.contains('saved');
+    btn.querySelector('span').textContent = isSaved ? 'Salvato' : 'Salva';
+  };
+  document.getElementById('detail-download-btn').onclick = (e) => trackDownload(e, note.id);
 
   // Comment Submit
   if (user) {
