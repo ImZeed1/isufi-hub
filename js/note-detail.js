@@ -84,85 +84,200 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
 
   container.innerHTML = `
     <div class="fade-up visible">
-      <div class="flex justify-between items-start mb-32 flex-wrap gap-16">
-        <div style="flex: 1; min-width: 300px;">
-          <div class="flex items-center gap-12 mb-12">
+      <!-- Header della Nota -->
+      <div class="note-detail-header mb-40">
+        <div class="flex flex-col gap-16">
+          <div class="flex items-center gap-12 flex-wrap">
             <span class="badge ${getTypeColorClass(note.type)}">${note.type || 'Risorsa'}</span>
-            ${note.bundle_id ? '<span class="badge" style="background:var(--accent-soft); color:var(--accent-alt); border-color:var(--accent-alt);">PACCHETTO</span>' : ''}
-            <span class="small" style="color:var(--text-muted);"><i data-lucide="calendar" style="width:14px;height:14px;vertical-align:middle;"></i> ${dateStr}</span>
+            ${note.bundle_id ? '<span class="badge badge-bundle"><i data-lucide="layers" style="width:12px;height:12px;"></i> PACCHETTO</span>' : ''}
+            <div class="note-meta-top">
+              <span class="small"><i data-lucide="calendar"></i> Caricato il ${dateStr}</span>
+              <span class="small"><i data-lucide="user"></i> ${note.uploader_name}</span>
+            </div>
           </div>
-          <h1 style="font-size: 2.5rem; margin-bottom: 12px;">${note.title}</h1>
-          <p style="font-size: 1.125rem; font-weight: 500; color: var(--accent);"><i data-lucide="book-open" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"></i> ${note.subject}</p>
+          <h1 class="note-main-title">${note.title}</h1>
+          <div class="note-subject-pill">
+            <i data-lucide="book-open"></i>
+            <span>${note.subject}</span>
+          </div>
         </div>
-        <div class="flex gap-12">
-          <button class="btn btn-secondary" id="detail-save-btn"><i data-lucide="bookmark" style="width:18px;height:18px;"></i> Salva</button>
-          <a href="${note.file_url}" target="_blank" id="detail-download-btn" class="btn btn-primary"><i data-lucide="download" style="width:18px;height:18px;"></i> Scarica</a>
+        
+        <div class="note-actions-fixed">
+          <button class="btn btn-secondary" id="detail-save-btn">
+            <i data-lucide="bookmark"></i> <span>Salva</span>
+          </button>
+          <a href="${note.file_url}" target="_blank" id="detail-download-btn" class="btn btn-primary">
+            <i data-lucide="download"></i> <span>Download PDF</span>
+          </a>
         </div>
       </div>
 
       <div class="note-detail-layout">
         <div class="note-detail-main">
+          <!-- Anteprima PDF -->
           ${isPdf ? `<div class="pdf-preview-container">
             <div class="pdf-preview-header">
-              <span class="small" style="font-weight:600;"><i data-lucide="eye" style="width:14px;height:14px;vertical-align:middle;"></i> Anteprima PDF</span>
-              <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pdf-frame').requestFullscreen()"><i data-lucide="maximize" style="width:14px;height:14px;"></i></button>
+              <div class="flex items-center gap-8">
+                <i data-lucide="file-text" style="width:16px;height:16px;color:var(--accent-alt);"></i>
+                <span class="small" style="font-weight:600;">Anteprima Documento</span>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pdf-frame').requestFullscreen()">
+                <i data-lucide="maximize"></i>
+              </button>
             </div>
-            <iframe id="pdf-frame" src="${note.file_url}#toolbar=0" width="100%" height="600px" style="border:none;"></iframe>
+            <iframe id="pdf-frame" src="${note.file_url}#toolbar=0" width="100%" height="650px" style="border:none;"></iframe>
           </div>` : ''}
 
-          <div class="info-card">
-            <h3 class="mb-16">Informazioni</h3>
-            <div class="info-grid">
-              <div><label class="small">Docente</label><div class="info-value">${note.professor || 'Non indicato'}</div></div>
-              <div><label class="small">Anno Accademico</label><div class="info-value">${note.academic_year || 'N.D.'}</div></div>
-              <div><label class="small">Anno Corso</label><div class="info-value">${note.year}° Anno</div></div>
-              <div><label class="small">Caricato da</label><div class="info-value">${note.uploader_name}</div></div>
+          <!-- Box Informazioni Tecniche -->
+          <div class="info-section-card">
+            <div class="section-header">
+              <i data-lucide="info"></i>
+              <h3>Dettagli Accademici</h3>
             </div>
-            <div class="mb-32"><h4>Descrizione</h4><p style="white-space: pre-wrap;">${note.description || 'Nessuna descrizione.'}</p></div>
-            ${note.table_of_contents ? `<div class="toc-container"><h4>Indice</h4><p style="white-space: pre-wrap; font-size:0.875rem;">${note.table_of_contents}</p></div>` : ''}
-            <div class="mt-32"><h4>Tag</h4><div class="card-tags">${tagsHtml}</div></div>
+            <div class="academic-grid">
+              <div class="academic-item">
+                <i data-lucide="graduation-cap"></i>
+                <div class="academic-content">
+                  <label>Docente</label>
+                  <span>${note.professor || 'Non indicato'}</span>
+                </div>
+              </div>
+              <div class="academic-item">
+                <i data-lucide="calendar-days"></i>
+                <div class="academic-content">
+                  <label>Anno Accademico</label>
+                  <span>${note.academic_year || 'N.D.'}</span>
+                </div>
+              </div>
+              <div class="academic-item">
+                <i data-lucide="milestone"></i>
+                <div class="academic-content">
+                  <label>Anno di Corso</label>
+                  <span>${note.year}° Anno</span>
+                </div>
+              </div>
+              <div class="academic-item">
+                <i data-lucide="tag"></i>
+                <div class="academic-content">
+                  <label>Area</label>
+                  <span>${note.area || 'N.D.'}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="description-block mt-32">
+              <h4>Descrizione del materiale</h4>
+              <p>${note.description || 'Nessuna descrizione aggiuntiva fornita dall\'autore.'}</p>
+            </div>
+
+            ${note.table_of_contents ? `
+            <div class="toc-block mt-24">
+              <div class="toc-header">
+                <i data-lucide="list-ordered"></i>
+                <span>Indice Contenuti</span>
+              </div>
+              <div class="toc-content">${note.table_of_contents}</div>
+            </div>` : ''}
+
+            <div class="tags-block mt-32">
+              <div class="flex items-center gap-8 mb-12">
+                <i data-lucide="hash" style="width:16px;height:16px;color:var(--text-light);"></i>
+                <span class="small" style="font-weight:600;color:var(--text-muted);">Tag Correlati</span>
+              </div>
+              <div class="card-tags">${tagsHtml}</div>
+            </div>
           </div>
 
-          <div id="comments-section" style="margin-top: 48px;">
-            <h3 class="mb-24 flex items-center gap-12"><i data-lucide="message-square" style="width:24px;height:24px;color:var(--accent-alt);"></i> Discussioni (<span id="comments-count">${comments.length}</span>)</h3>
-            <div id="comment-form-container" class="mb-40">
-              ${user ? `<div class="comment-form-card">
-                  <div class="form-group mb-16"><label class="form-label">Lascia un commento</label><textarea id="comment-content" class="form-textarea" placeholder="Scrivi qui..."></textarea></div>
-                  <div class="flex justify-between items-center">
-                    <label class="flex items-center gap-8" style="cursor:pointer;"><input type="checkbox" id="is-errata"> <span class="small">Segnala <strong>Errata Corrige</strong></span></label>
-                    <button id="submit-comment" class="btn btn-primary">Invia</button>
-                  </div>
-                </div>` : `<div class="text-center auth-needed-card"><p class="small">Accedi per commentare.</p></div>`}
+          <!-- Sezione Commenti / Community -->
+          <div id="comments-section" class="mt-48">
+            <div class="section-header mb-24">
+              <i data-lucide="messages-square"></i>
+              <h3>Discussioni Community <span class="count-badge">${comments.length}</span></h3>
             </div>
-            <div id="comments-list">${renderCommentsList(comments)}</div>
+
+            <div class="comment-input-area mb-40">
+              ${user ? `
+                <div class="professional-form">
+                  <textarea id="comment-content" class="form-textarea" placeholder="Hai domande o vuoi ringraziare l'autore?"></textarea>
+                  <div class="form-footer">
+                    <label class="errata-toggle">
+                      <input type="checkbox" id="is-errata">
+                      <span class="toggle-box"></span>
+                      <span class="toggle-label">Segnala Errata Corrige</span>
+                    </label>
+                    <button id="submit-comment" class="btn btn-primary btn-sm">Invia Commento</button>
+                  </div>
+                </div>` : `
+                <div class="auth-notice">
+                  <i data-lucide="lock"></i>
+                  <p>Devi aver effettuato l'accesso per partecipare alla discussione.</p>
+                  <a href="login.html" class="btn btn-secondary btn-sm">Accedi</a>
+                </div>`}
+            </div>
+
+            <div id="comments-list" class="comments-feed">
+              ${renderCommentsList(comments)}
+            </div>
           </div>
         </div>
 
         <div class="note-detail-sidebar">
           <div class="sidebar-sticky">
-            ${bundleFiles.length > 1 ? `<div class="sidebar-card">
-                <h4 class="mb-16"><i data-lucide="layers" style="width:18px;height:18px;color:var(--accent-alt);"></i> Nel pacchetto</h4>
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                  ${bundleFiles.map(bf => `<a href="note-detail.html?id=${bf.id}" class="bundle-item ${bf.id == note.id ? 'active' : ''}" style="display:block; padding:12px; border-radius:var(--radius-sm); border:1px solid ${bf.id == note.id ? 'var(--accent-alt)' : 'var(--border)'}; background:${bf.id == note.id ? 'var(--accent-glow)' : 'transparent'}; text-decoration:none; color:inherit;">
-                      <div style="font-weight:600; font-size:0.8125rem;">${bf.title.split(' (Parte')[0]}</div>
-                      <div class="small" style="font-size:0.75rem; color:var(--text-muted);">${bf.type}</div>
-                    </a>`).join('')}
+            <!-- Box Rating -->
+            <div class="sidebar-card rating-card-pro">
+              <span class="sidebar-label">VALUTAZIONE MEDIA</span>
+              <div class="rating-hero">
+                <span class="rating-val">${note.rating > 0 ? parseFloat(note.rating).toFixed(1) : '--'}</span>
+                <div class="rating-stars-static">
+                   <div class="star-rating justify-center mb-4">
+                    ${[1,2,3,4,5].map(v => `<i data-lucide="star" class="${v <= Math.round(note.rating) ? 'filled' : ''}" style="width:16px;height:16px;"></i>`).join('')}
+                   </div>
+                   <span class="small">${note.rating_count || 0} recensioni</span>
                 </div>
-              </div>` : ''}
-
-            <div class="sidebar-card rating-card">
-              <h4 class="mb-16">Valutazione Community</h4>
-              <div id="avg-rating-display" class="rating-number">${note.rating > 0 ? parseFloat(note.rating).toFixed(1) : '--'}</div>
-              <p class="small" id="rating-count-display" style="margin:8px 0 24px 0;">Basato su ${note.rating_count || 0} voti</p>
-              
-              <div class="star-rating justify-center mb-16" id="interactive-rating">
-                ${[1, 2, 3, 4, 5].map(v => `<i data-lucide="star" class="star" data-value="${v}" style="cursor:pointer; width:28px; height:28px;"></i>`).join('')}
               </div>
-              <p class="small" id="user-rating-msg" style="color:var(--accent-alt); font-weight:500;">${userRating > 0 ? 'Hai già votato questo appunto' : 'Clicca sulle stelle per votare'}</p>
+              
+              <div class="user-vote-box mt-24">
+                <span class="small mb-12 block">La tua valutazione</span>
+                <div class="star-rating justify-center mb-12" id="interactive-rating">
+                  ${[1, 2, 3, 4, 5].map(v => `<i data-lucide="star" class="star" data-value="${v}" style="cursor:pointer; width:24px; height:24px;"></i>`).join('')}
+                </div>
+                <p class="small status-msg" id="user-rating-msg">${userRating > 0 ? 'Hai già espresso il tuo voto' : 'Seleziona una stella'}</p>
+              </div>
+            </div>
+
+            <!-- Box Bundle -->
+            ${bundleFiles.length > 1 ? `
+            <div class="sidebar-card bundle-card-pro">
+              <div class="flex items-center gap-8 mb-16">
+                <i data-lucide="package" style="width:18px;height:18px;color:var(--accent-alt);"></i>
+                <h4 style="margin:0;">Contenuti Correlati</h4>
+              </div>
+              <div class="bundle-list-pro">
+                ${bundleFiles.map(bf => `
+                  <a href="note-detail.html?id=${bf.id}" class="bundle-link-item ${bf.id == note.id ? 'current' : ''}">
+                    <div class="bundle-icon">
+                      <i data-lucide="${bf.type === 'esercizi' ? 'pencil' : 'file-text'}"></i>
+                    </div>
+                    <div class="bundle-info">
+                      <span class="bt">${bf.title.split(' (Parte')[0]}</span>
+                      <span class="bs">${bf.type}</span>
+                    </div>
+                    ${bf.id == note.id ? '<span class="now-viewing">In visione</span>' : ''}
+                  </a>
+                `).join('')}
+              </div>
+            </div>` : ''}
+
+            <!-- Tips / Safety -->
+            <div class="safety-card">
+              <i data-lucide="shield-check"></i>
+              <p class="small">Questo materiale è riservato agli allievi ISUFI. Non diffondere esternamente.</p>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  `;
     </div>
   `;
 
@@ -259,15 +374,24 @@ const handleRateNote = async (noteId, userId, score) => {
 };
 
 const renderCommentsList = (comments) => {
-  if (!comments || comments.length === 0) return `<div class="empty-state" style="padding:32px;"><p>Nessun commento. Sii il primo!</p></div>`;
+  if (!comments || comments.length === 0) return `<div class="empty-state-comments"><i data-lucide="message-circle" style="width:32px;height:32px;opacity:0.2;margin-bottom:12px;"></i><p>Ancora nessuna discussione. Inizia tu!</p></div>`;
+  
   return comments.map(c => `
-    <div style="background:var(--bg-card); padding:20px; border-radius:var(--radius-md); border:1px solid ${c.is_errata ? '#EF4444' : 'var(--border)'}; margin-bottom:16px; position:relative;">
-      ${c.is_errata ? `<span class="badge" style="position:absolute; top:12px; right:12px; color:#EF4444; border-color:#EF4444; background:rgba(239,68,68,0.05);">ERRATA CORRIGE</span>` : ''}
-      <div class="flex items-center gap-12 mb-12">
-        <div style="width:32px; height:32px; border-radius:999px; background:var(--accent); color:white; display:flex; items-center; justify-content:center; font-weight:600; font-size:0.75rem;">${(c.user_name || 'U').charAt(0).toUpperCase()}</div>
-        <div><div style="font-weight:600; font-size:0.875rem;">${c.user_name || 'Utente'}</div><div class="small" style="font-size:0.75rem;">${new Date(c.created_at).toLocaleDateString('it-IT')}</div></div>
+    <div class="comment-item ${c.is_errata ? 'is-errata-report' : ''}">
+      <div class="comment-sidebar">
+        <div class="comment-avatar">${(c.user_name || 'U').charAt(0).toUpperCase()}</div>
+        ${c.is_errata ? '<div class="errata-indicator" title="Segnalazione Errore"><i data-lucide="alert-triangle"></i></div>' : ''}
       </div>
-      <p style="font-size:0.9375rem; margin:0;">${c.content}</p>
+      <div class="comment-content-wrap">
+        <div class="comment-meta">
+          <span class="comment-author">${c.user_name || 'Studente'}</span>
+          <span class="comment-date">${new Date(c.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+        </div>
+        <div class="comment-text">
+          ${c.is_errata ? '<span class="errata-label">SEGNALAZIONE ERRORE:</span> ' : ''}
+          ${c.content}
+        </div>
+      </div>
     </div>`).join('');
 };
 
