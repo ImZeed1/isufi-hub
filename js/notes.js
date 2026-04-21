@@ -13,7 +13,7 @@ export const getTypeColorClass = (type) => {
 };
 
 // Toggle preferiti
-window.toggleSaveNote = async (e, noteId) => {
+export const toggleSaveNote = async (e, noteId) => {
   e.preventDefault();
   e.stopPropagation();
 

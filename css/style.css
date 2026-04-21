@@ -688,32 +688,50 @@ section {
   opacity: 0.8;
 }
 
-.comment-actions {
+.comment-actions-group {
   display: flex;
-  gap: 8px;
+  gap: 12px;
 }
 
-.btn-icon-sm {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  color: var(--text-light);
+.btn-comment-action {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Lora', serif;
 }
 
-.btn-icon-sm:hover {
-  background: var(--bg);
+.btn-comment-action:hover {
+  border-color: var(--accent-alt);
   color: var(--accent);
+  background: var(--accent-glow);
+  transform: translateY(-1px);
 }
 
-.btn-icon-sm.btn-delete:hover {
-  background: #FEF2F2;
-  color: #EF4444;
+.btn-comment-action i {
+  color: var(--text-light);
+}
+
+.btn-comment-action:hover i {
+  color: var(--accent-alt);
+}
+
+.btn-comment-delete:hover {
+  background: #FEF2F2 !important;
+  border-color: #FCA5A5 !important;
+  color: #EF4444 !important;
+}
+
+.btn-comment-delete:hover i {
+  color: #EF4444 !important;
 }
 
 .comment-edit-area textarea {

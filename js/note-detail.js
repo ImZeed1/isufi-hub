@@ -1,4 +1,5 @@
 import { supabase, getCurrentUser } from './supabase-config.js';
+import { toggleSaveNote } from './notes.js';
 
 // Funzione locale per evitare dipendenze che potrebbero fallire
 const getTypeColorClass = (type) => {
@@ -284,7 +285,7 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
 
 const setupEventListeners = (note, user, userProfile, userRating) => {
   // Save/Download
-  document.getElementById('detail-save-btn').onclick = (e) => window.toggleSaveNote?.(e, note.id);
+  document.getElementById('detail-save-btn').onclick = (e) => toggleSaveNote(e, note.id);
   document.getElementById('detail-download-btn').onclick = (e) => window.trackDownload?.(e, note.id);
 
   // Comment Submit
@@ -390,9 +391,13 @@ const renderCommentsList = (comments, currentUser) => {
               <span class="comment-date">${new Date(c.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
             </div>
             ${isOwner ? `
-              <div class="comment-actions">
-                <button class="btn-icon-sm" onclick="window.prepareEditComment('${c.id}')" title="Modifica"><i data-lucide="pencil" style="width:14px;height:14px;"></i></button>
-                <button class="btn-icon-sm btn-delete" onclick="window.handleCommentDelete('${c.id}')" title="Elimina"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></button>
+              <div class="comment-actions-group">
+                <button class="btn-comment-action" onclick="window.prepareEditComment('${c.id}')">
+                  <i data-lucide="pencil" style="width:12px;height:12px;"></i> <span>Modifica</span>
+                </button>
+                <button class="btn-comment-action btn-comment-delete" onclick="window.handleCommentDelete('${c.id}')">
+                  <i data-lucide="trash-2" style="width:12px;height:12px;"></i> <span>Elimina</span>
+                </button>
               </div>
             ` : ''}
           </div>
