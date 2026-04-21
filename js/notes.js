@@ -19,9 +19,15 @@ export const getTypeColorClass = (type) => {
 // Toggle preferiti
 export const toggleSaveNote = async (e, noteId) => {
   if (e) {
-    e.preventDefault();
-    e.stopPropagation();
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
   }
+
+  if (!noteId) {
+    console.error("DEBUG: noteId mancante in toggleSaveNote");
+    return;
+  }
+  const idStr = String(noteId);
 
   const user = await getCurrentUser();
   if (!user) {
@@ -30,66 +36,70 @@ export const toggleSaveNote = async (e, noteId) => {
     return;
   }
 
-  const btn = (e && e.currentTarget) ? e.currentTarget : document.querySelector(`.save-btn[data-note-id="${noteId}"]`);
-  const icon = btn ? btn.querySelector('i, svg') : null;
-  const isCurrentlySaved = btn ? btn.classList.contains('saved') : savedNoteIds.includes(String(noteId));
+  // Identifica il pulsante: cerchiamo in e.currentTarget, poi per data-id, poi per ID fisso (dettaglio)
+  let btn = (e && e.currentTarget && e.currentTarget.tagName === 'BUTTON') ? e.currentTarget : null;
+  if (!btn) {
+    btn = document.querySelector(`.save-btn[data-note-id="${idStr}"]`) || 
+          document.getElementById('detail-save-btn');
+  }
 
-  console.log(`DEBUG: Toggling note ${noteId}. Currently saved: ${isCurrentlySaved}`);
+  const icon = btn ? btn.querySelector('i, svg') : null;
+  const isCurrentlySaved = btn ? btn.classList.contains('saved') : savedNoteIds.includes(idStr);
+
+  console.log(`DEBUG: Toggling note ${idStr}. User: ${user.id}. Currently saved (UI state): ${isCurrentlySaved}`);
 
   // Optimistic UI update
   if (btn) {
-    if (isCurrentlySaved) {
-      btn.classList.remove('saved');
-      if (icon) {
-        icon.setAttribute('fill', 'none');
-        icon.style.color = 'var(--text-muted)';
-      }
-    } else {
-      btn.classList.add('saved');
-      if (icon) {
-        icon.setAttribute('fill', 'var(--accent-alt)');
-        icon.style.color = 'var(--accent-alt)';
-      }
+    btn.classList.toggle('saved', !isCurrentlySaved);
+    if (icon) {
+      icon.setAttribute('fill', !isCurrentlySaved ? 'var(--accent-alt)' : 'none');
+      icon.style.color = !isCurrentlySaved ? 'var(--accent-alt)' : 'var(--text-muted)';
     }
   }
 
   try {
     if (isCurrentlySaved) {
-      const { error } = await supabase.from('saved_notes').delete().eq('user_id', user.id).eq('note_id', noteId);
+      // RIMOZIONE
+      const { error } = await supabase
+        .from('saved_notes')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('note_id', noteId);
+      
       if (error) throw error;
       
-      // Update local state
-      savedNoteIds = savedNoteIds.filter(id => id !== String(noteId));
+      savedNoteIds = savedNoteIds.filter(id => id !== idStr);
       window.Toast.info("Rimosso dai preferiti");
     } else {
-      const { error } = await supabase.from('saved_notes').insert([{ user_id: user.id, note_id: noteId }]);
-      if (error) throw error;
+      // AGGIUNTA
+      const { error } = await supabase
+        .from('saved_notes')
+        .insert([{ user_id: user.id, note_id: noteId }]);
       
-      // Update local state
-      if (!savedNoteIds.includes(String(noteId))) {
-        savedNoteIds.push(String(noteId));
+      if (error) {
+        if (error.code === '23505') { // Duplicate key
+          console.warn("Nota già presente nei preferiti (DB)");
+        } else {
+          throw error;
+        }
+      }
+      
+      if (!savedNoteIds.includes(idStr)) {
+        savedNoteIds.push(idStr);
       }
       window.Toast.success("Salvato nei preferiti!");
     }
   } catch (err) {
-    console.error("Errore toggleSaveNote:", err);
+    console.error("ERRORE toggleSaveNote:", err);
     // Revert on error
     if (btn) {
-      if (isCurrentlySaved) {
-        btn.classList.add('saved');
-        if (icon) {
-          icon.setAttribute('fill', 'var(--accent-alt)');
-          icon.style.color = 'var(--accent-alt)';
-        }
-      } else {
-        btn.classList.remove('saved');
-        if (icon) {
-          icon.setAttribute('fill', 'none');
-          icon.style.color = 'var(--text-muted)';
-        }
+      btn.classList.toggle('saved', isCurrentlySaved);
+      if (icon) {
+        icon.setAttribute('fill', isCurrentlySaved ? 'var(--accent-alt)' : 'none');
+        icon.style.color = isCurrentlySaved ? 'var(--accent-alt)' : 'var(--text-muted)';
       }
     }
-    window.Toast.error("Errore nel salvataggio. Riprova.");
+    window.Toast.error("Errore nel salvataggio: " + (err.message || "Riprova."));
   }
 };
 window.toggleSaveNote = toggleSaveNote;

@@ -288,14 +288,21 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
 
 const setupEventListeners = (note, user, userProfile, userRating) => {
   // Save/Download
-  document.getElementById('detail-save-btn').onclick = async (e) => {
-    await toggleSaveNote(e, note.id);
-    // Aggiorna il testo del pulsante dopo il toggle
-    const btn = e.currentTarget;
-    const isSaved = btn.classList.contains('saved');
-    btn.querySelector('span').textContent = isSaved ? 'Salvato' : 'Salva';
-  };
-  document.getElementById('detail-download-btn').onclick = (e) => trackDownload(e, note.id);
+  const saveBtn = document.getElementById('detail-save-btn');
+  if (saveBtn) {
+    saveBtn.onclick = async (e) => {
+      await toggleSaveNote(e, note.id);
+      // Aggiorna il testo del pulsante dopo il toggle (toggleSaveNote gestisce classi e icone)
+      const isSavedNow = saveBtn.classList.contains('saved');
+      const span = saveBtn.querySelector('span');
+      if (span) span.textContent = isSavedNow ? 'Salvato' : 'Salva';
+    };
+  }
+  
+  const downloadBtn = document.getElementById('detail-download-btn');
+  if (downloadBtn) {
+    downloadBtn.onclick = (e) => trackDownload(e, note.id);
+  }
 
   // Comment Submit
   if (user) {
