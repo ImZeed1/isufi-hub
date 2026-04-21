@@ -1,5 +1,9 @@
 import { supabase, getCurrentUser } from './supabase-config.js';
 
+// Stato globale del modulo (accessibile da tutte le funzioni in questo file)
+let savedNoteIds = [];
+let currentUserId = null;
+
 // Badge color per tipo
 export const getTypeColorClass = (type) => {
   if (!type) return 'badge-type-zip';
@@ -14,8 +18,10 @@ export const getTypeColorClass = (type) => {
 
 // Toggle preferiti
 export const toggleSaveNote = async (e, noteId) => {
-  e.preventDefault();
-  e.stopPropagation();
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
   const user = await getCurrentUser();
   if (!user) {
@@ -24,22 +30,26 @@ export const toggleSaveNote = async (e, noteId) => {
     return;
   }
 
-  const btn = e.currentTarget;
-  const icon = btn.querySelector('i, svg');
-  const isCurrentlySaved = btn.classList.contains('saved');
+  const btn = (e && e.currentTarget) ? e.currentTarget : document.querySelector(`.save-btn[data-note-id="${noteId}"]`);
+  const icon = btn ? btn.querySelector('i, svg') : null;
+  const isCurrentlySaved = btn ? btn.classList.contains('saved') : savedNoteIds.includes(String(noteId));
+
+  console.log(`DEBUG: Toggling note ${noteId}. Currently saved: ${isCurrentlySaved}`);
 
   // Optimistic UI update
-  if (isCurrentlySaved) {
-    btn.classList.remove('saved');
-    if (icon) {
-      icon.setAttribute('fill', 'none');
-      icon.style.color = 'var(--text-muted)';
-    }
-  } else {
-    btn.classList.add('saved');
-    if (icon) {
-      icon.setAttribute('fill', 'var(--accent-alt)');
-      icon.style.color = 'var(--accent-alt)';
+  if (btn) {
+    if (isCurrentlySaved) {
+      btn.classList.remove('saved');
+      if (icon) {
+        icon.setAttribute('fill', 'none');
+        icon.style.color = 'var(--text-muted)';
+      }
+    } else {
+      btn.classList.add('saved');
+      if (icon) {
+        icon.setAttribute('fill', 'var(--accent-alt)');
+        icon.style.color = 'var(--accent-alt)';
+      }
     }
   }
 
@@ -47,26 +57,36 @@ export const toggleSaveNote = async (e, noteId) => {
     if (isCurrentlySaved) {
       const { error } = await supabase.from('saved_notes').delete().eq('user_id', user.id).eq('note_id', noteId);
       if (error) throw error;
+      
+      // Update local state
+      savedNoteIds = savedNoteIds.filter(id => id !== String(noteId));
       window.Toast.info("Rimosso dai preferiti");
     } else {
       const { error } = await supabase.from('saved_notes').insert([{ user_id: user.id, note_id: noteId }]);
       if (error) throw error;
+      
+      // Update local state
+      if (!savedNoteIds.includes(String(noteId))) {
+        savedNoteIds.push(String(noteId));
+      }
       window.Toast.success("Salvato nei preferiti!");
     }
   } catch (err) {
     console.error("Errore toggleSaveNote:", err);
     // Revert on error
-    if (isCurrentlySaved) {
-      btn.classList.add('saved');
-      if (icon) {
-        icon.setAttribute('fill', 'var(--accent-alt)');
-        icon.style.color = 'var(--accent-alt)';
-      }
-    } else {
-      btn.classList.remove('saved');
-      if (icon) {
-        icon.setAttribute('fill', 'none');
-        icon.style.color = 'var(--text-muted)';
+    if (btn) {
+      if (isCurrentlySaved) {
+        btn.classList.add('saved');
+        if (icon) {
+          icon.setAttribute('fill', 'var(--accent-alt)');
+          icon.style.color = 'var(--accent-alt)';
+        }
+      } else {
+        btn.classList.remove('saved');
+        if (icon) {
+          icon.setAttribute('fill', 'none');
+          icon.style.color = 'var(--text-muted)';
+        }
       }
     }
     window.Toast.error("Errore nel salvataggio. Riprova.");
@@ -156,12 +176,15 @@ const createSkeletonCards = (count = 6) => {
 };
 
 // Genera la card
-export const createNoteCard = (note, savedNoteIds = [], currentUserId = null) => {
+export const createNoteCard = (note, overrideSavedIds, overrideUserId) => {
   const card = document.createElement('div');
   card.className = 'note-card fade-up';
   card.setAttribute('data-area', note.area);
 
-  const isSaved = savedNoteIds.map(String).includes(String(note.id));
+  const activeSavedIds = overrideSavedIds || savedNoteIds;
+  const activeUserId = overrideUserId || currentUserId;
+
+  const isSaved = activeSavedIds.includes(String(note.id));
   const saveClass = isSaved ? 'saved' : '';
   const saveIconFill = isSaved ? 'var(--accent-alt)' : 'none';
   const saveIconColor = isSaved ? 'var(--accent-alt)' : 'var(--text-muted)';
@@ -170,7 +193,7 @@ export const createNoteCard = (note, savedNoteIds = [], currentUserId = null) =>
     `<span class="badge">#${tag}</span>`
   ).join('');
 
-  const isUploader = currentUserId === note.uploader_id;
+  const isUploader = activeUserId === note.uploader_id;
   let adminActionsHtml = '';
 
   if (isUploader) {
@@ -212,7 +235,7 @@ export const createNoteCard = (note, savedNoteIds = [], currentUserId = null) =>
           &middot; <i data-lucide="history" style="width:12px;height:12px;vertical-align:middle;"></i> ${note.academic_year || 'A.A. N.D.'}
         </div>
       </div>
-      <button class="save-btn ${saveClass}" onclick="toggleSaveNote(event, '${note.id}')" title="Salva nei preferiti">
+      <button class="save-btn ${saveClass}" data-note-id="${note.id}" onclick="toggleSaveNote(event, '${note.id}')" title="Salva nei preferiti">
         <i data-lucide="bookmark" style="width:20px;height:20px;color:${saveIconColor};" fill="${saveIconFill}"></i>
       </button>
     </div>
@@ -246,7 +269,7 @@ export const createNoteCard = (note, savedNoteIds = [], currentUserId = null) =>
 };
 
 // Renderizza note in un container
-export const renderNotes = (notes, containerId, savedNoteIds = [], currentUserId = null) => {
+export const renderNotes = (notes, containerId, overrideSavedIds, overrideUserId) => {
   const container = document.getElementById(containerId);
   if (!container) return;
 
@@ -263,7 +286,7 @@ export const renderNotes = (notes, containerId, savedNoteIds = [], currentUserId
   }
 
   notes.forEach((note, index) => {
-    const card = createNoteCard(note, savedNoteIds, currentUserId);
+    const card = createNoteCard(note, overrideSavedIds, overrideUserId);
     container.appendChild(card);
     setTimeout(() => card.classList.add('visible'), 30 + (index * 50));
   });
@@ -276,13 +299,15 @@ export const renderNotes = (notes, containerId, savedNoteIds = [], currentUserId
 // ============================================
 const initNotes = async () => {
   const user = await getCurrentUser();
-  let savedNoteIds = [];
-  let currentUserId = null;
+  
+  // Resetta stato per sicurezza
+  savedNoteIds = [];
+  currentUserId = null;
 
   if (user) {
     currentUserId = user.id;
     const { data: saved } = await supabase.from('saved_notes').select('note_id').eq('user_id', user.id);
-    if (saved) savedNoteIds = saved.map(s => s.note_id);
+    if (saved) savedNoteIds = saved.map(s => String(s.note_id));
   }
 
   const recentContainer = document.getElementById('recent-notes-container');
@@ -323,7 +348,7 @@ const initNotes = async () => {
 
   // HOME: recent notes
   if (recentContainer) {
-    renderNotes(currentNotes.slice(0, 6), 'recent-notes-container', savedNoteIds, currentUserId);
+    renderNotes(currentNotes.slice(0, 6), 'recent-notes-container');
     
     // Caricamento statistiche reali per la homepage
     const loadDynamicStats = async () => {
@@ -431,7 +456,7 @@ const initNotes = async () => {
 
   // LIBRERIA: filtri + ordinamento + ricerca
   if (notesGridContainer) {
-    renderNotes(currentNotes, 'notes-grid', savedNoteIds, currentUserId);
+    renderNotes(currentNotes, 'notes-grid');
 
     // Counter
     const countEl = document.getElementById('notes-count');
@@ -449,7 +474,7 @@ const initNotes = async () => {
         } else if (value === 'votati') {
           currentNotes.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         }
-        renderNotes(currentNotes, 'notes-grid', savedNoteIds, currentUserId);
+        renderNotes(currentNotes, 'notes-grid');
         if (countEl) countEl.textContent = currentNotes.length;
       });
     }
