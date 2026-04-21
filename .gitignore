@@ -7,3 +7,7 @@ __pycache__/
 .env
 db.sqlite3
 /Users/francescopitotti/.gemini/tmp/isufi-hub
+node_modules/
+www/
+android/
+ios/

@@ -53,6 +53,24 @@ window.Toast = {
 };
 
 // ============================================
+// FILE HANDLING (Capacitor/Browser)
+// ============================================
+window.openFileUrl = async (url) => {
+  if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+    try {
+      // Import dinamico per evitare errori se non presente
+      const { Browser } = await import('https://cdn.jsdelivr.net/npm/@capacitor/browser/+esm');
+      await Browser.open({ url });
+    } catch (e) {
+      console.error("Errore apertura Browser plugin:", e);
+      window.open(url, '_blank');
+    }
+  } else {
+    window.open(url, '_blank');
+  }
+};
+
+// ============================================
 // MAIN INIT
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {

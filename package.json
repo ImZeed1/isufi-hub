@@ -1,0 +1,32 @@
+{
+  "name": "isufi-hub",
+  "version": "1.0.0",
+  "description": "Piattaforma di knowledge-sharing dedicata agli allievi della Scuola Superiore ISUFI. L'obiettivo è centralizzare gli appunti e il materiale didattico di qualità, organizzandoli per area disciplinare per non dover impazzire tra Drive e gruppi WhatsApp.",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-app": "mkdir -p www && cp -R about.html index.html login.html manifest.json note-detail.html notes.html profile.html README.md sw.js upload.html assets css js www/ && npx cap sync"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ImZeed1/isufi-hub.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ImZeed1/isufi-hub/issues"
+  },
+  "homepage": "https://github.com/ImZeed1/isufi-hub#readme",
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.1",
+    "@capacitor/browser": "^8.0.3",
+    "@capacitor/ios": "^8.3.1"
+  }
+}

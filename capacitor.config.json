@@ -1,0 +1,10 @@
+{
+  "appId": "it.isufihub.app",
+  "appName": "ISUFI Hub",
+  "webDir": "www",
+  "server": {
+    "allowNavigation": [
+      "obxnjbbobcfkteujxibl.supabase.co"
+    ]
+  }
+}

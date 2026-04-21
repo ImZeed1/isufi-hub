@@ -301,7 +301,11 @@ const setupEventListeners = (note, user, userProfile, userRating) => {
   
   const downloadBtn = document.getElementById('detail-download-btn');
   if (downloadBtn) {
-    downloadBtn.onclick = (e) => trackDownload(e, note.id);
+    downloadBtn.onclick = (e) => {
+      e.preventDefault();
+      trackDownload(e, note.id);
+      window.openFileUrl(note.file_url);
+    };
   }
 
   // Comment Submit
