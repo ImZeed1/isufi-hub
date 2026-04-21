@@ -160,6 +160,10 @@ const initProfile = async () => {
       const { data: savedIds } = await supabase.from('saved_notes').select('note_id').eq('user_id', user.id);
       const ids = savedIds ? savedIds.map(s => s.note_id) : [];
 
+      // Aggiorna il contatore nelle stats
+      const countSavedEl = document.getElementById('count-saved');
+      if (countSavedEl) countSavedEl.textContent = ids.length;
+
       if (ids.length === 0) {
         favoritesGrid.style.display = 'none';
         noFavoritesMsg.style.display = 'block';

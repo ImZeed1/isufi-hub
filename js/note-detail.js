@@ -37,7 +37,7 @@ const initNoteDetail = async () => {
       const [{ data: profile }, { data: rating }, { data: saved }] = await Promise.all([
         supabase.from('profiles').select('nickname').eq('id', user.id).single(),
         supabase.from('ratings').select('score').eq('note_id', noteId).eq('user_id', user.id).maybeSingle(),
-        supabase.from('saved_notes').select('id').eq('user_id', user.id).eq('note_id', noteId).maybeSingle()
+        supabase.from('saved_notes').select('note_id').eq('user_id', user.id).eq('note_id', noteId).maybeSingle()
       ]);
       userProfile = profile;
       if (rating) userRating = rating.score;

@@ -61,6 +61,7 @@ export const toggleSaveNote = async (e, noteId) => {
     window.Toast.error("Errore nel salvataggio. Riprova.");
   }
 };
+window.toggleSaveNote = toggleSaveNote;
 
 // Modifica titolo
 window.editNote = async (e, noteId, currentTitle) => {
