@@ -688,6 +688,39 @@ section {
   opacity: 0.8;
 }
 
+.comment-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon-sm {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-icon-sm:hover {
+  background: var(--bg);
+  color: var(--accent);
+}
+
+.btn-icon-sm.btn-delete:hover {
+  background: #FEF2F2;
+  color: #EF4444;
+}
+
+.comment-edit-area textarea {
+  min-height: 80px !important;
+  font-size: 0.9375rem !important;
+}
+
 @media (max-width: 991px) {
   .note-main-title { font-size: 2.25rem; }
   .note-actions-fixed { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }

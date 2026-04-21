@@ -214,9 +214,8 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
                   <a href="login.html" class="btn btn-secondary btn-sm">Accedi</a>
                 </div>`}
             </div>
-
             <div id="comments-list" class="comments-feed">
-              ${renderCommentsList(comments)}
+              ${renderCommentsList(comments, user)}
             </div>
           </div>
         </div>
@@ -371,26 +370,95 @@ const handleRateNote = async (noteId, userId, score) => {
   }
 };
 
-const renderCommentsList = (comments) => {
+const renderCommentsList = (comments, currentUser) => {
   if (!comments || comments.length === 0) return `<div class="empty-state-comments"><i data-lucide="message-circle" style="width:32px;height:32px;opacity:0.2;margin-bottom:12px;"></i><p>Ancora nessuna discussione. Inizia tu!</p></div>`;
   
-  return comments.map(c => `
-    <div class="comment-item ${c.is_errata ? 'is-errata-report' : ''}">
+  return comments.map(c => {
+    const isOwner = currentUser && c.user_id === currentUser.id;
+    
+    return `
+    <div class="comment-item ${c.is_errata ? 'is-errata-report' : ''}" id="comment-${c.id}">
       <div class="comment-sidebar">
         <div class="comment-avatar">${(c.user_name || 'U').charAt(0).toUpperCase()}</div>
         ${c.is_errata ? '<div class="errata-indicator" title="Segnalazione Errore"><i data-lucide="alert-triangle"></i></div>' : ''}
       </div>
       <div class="comment-content-wrap">
         <div class="comment-meta">
-          <span class="comment-author">${c.user_name || 'Studente'}</span>
-          <span class="comment-date">${new Date(c.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+          <div class="flex items-center justify-between w-full">
+            <div>
+              <span class="comment-author">${c.user_name || 'Studente'}</span>
+              <span class="comment-date">${new Date(c.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+            </div>
+            ${isOwner ? `
+              <div class="comment-actions">
+                <button class="btn-icon-sm" onclick="window.prepareEditComment('${c.id}')" title="Modifica"><i data-lucide="pencil" style="width:14px;height:14px;"></i></button>
+                <button class="btn-icon-sm btn-delete" onclick="window.handleCommentDelete('${c.id}')" title="Elimina"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></button>
+              </div>
+            ` : ''}
+          </div>
         </div>
-        <div class="comment-text">
+        <div class="comment-text" id="comment-text-${c.id}">
           ${c.is_errata ? '<span class="errata-label">SEGNALAZIONE ERRORE:</span> ' : ''}
           ${c.content}
         </div>
+        <div class="comment-edit-area" id="comment-edit-${c.id}" style="display:none; margin-top:12px;">
+          <textarea class="form-textarea mb-12" id="edit-input-${c.id}">${c.content}</textarea>
+          <div class="flex gap-8">
+            <button class="btn btn-primary btn-sm" onclick="window.handleCommentUpdate('${c.id}')">Salva</button>
+            <button class="btn btn-secondary btn-sm" onclick="window.cancelEditComment('${c.id}')">Annulla</button>
+          </div>
+        </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+};
+
+// Global handlers per i pulsanti inline
+window.prepareEditComment = (id) => {
+  document.getElementById(`comment-text-${id}`).style.display = 'none';
+  document.getElementById(`comment-edit-${id}`).style.display = 'block';
+};
+
+window.cancelEditComment = (id) => {
+  document.getElementById(`comment-text-${id}`).style.display = 'block';
+  document.getElementById(`comment-edit-${id}`).style.display = 'none';
+};
+
+window.handleCommentUpdate = async (id) => {
+  const newContent = document.getElementById(`edit-input-${id}`).value.trim();
+  if (!newContent) return;
+  
+  try {
+    const { error } = await supabase
+      .from('comments')
+      .update({ content: newContent })
+      .eq('id', id);
+    
+    if (error) throw error;
+    window.Toast.success("Commento aggiornato.");
+    setTimeout(() => window.location.reload(), 500);
+  } catch (err) {
+    window.Toast.error("Errore nell'aggiornamento.");
+    console.error(err);
+  }
+};
+
+window.handleCommentDelete = async (id) => {
+  if (!confirm("Sei sicuro di voler eliminare questo commento?")) return;
+  
+  try {
+    const { error } = await supabase
+      .from('comments')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+    window.Toast.info("Commento eliminato.");
+    document.getElementById(`comment-${id}`).remove();
+  } catch (err) {
+    window.Toast.error("Errore nell'eliminazione.");
+    console.error(err);
+  }
 };
 
 const handleCommentSubmit = async (note, user, profile) => {
