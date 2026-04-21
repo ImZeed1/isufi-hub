@@ -100,47 +100,47 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
         </div>
       </div>
 
-      <div class="grid-12">
-        <div style="grid-column: span 8;">
-          ${isPdf ? `<div style="background:var(--bg-elevated); border-radius:var(--radius-lg); border:1px solid var(--border); overflow:hidden; margin-bottom:32px;">
-            <div style="padding:12px 20px; background:var(--bg-card); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+      <div class="note-detail-layout">
+        <div class="note-detail-main">
+          ${isPdf ? `<div class="pdf-preview-container">
+            <div class="pdf-preview-header">
               <span class="small" style="font-weight:600;"><i data-lucide="eye" style="width:14px;height:14px;vertical-align:middle;"></i> Anteprima PDF</span>
               <button class="btn btn-ghost btn-sm" onclick="document.getElementById('pdf-frame').requestFullscreen()"><i data-lucide="maximize" style="width:14px;height:14px;"></i></button>
             </div>
             <iframe id="pdf-frame" src="${note.file_url}#toolbar=0" width="100%" height="600px" style="border:none;"></iframe>
           </div>` : ''}
 
-          <div style="background:var(--bg-card); padding:32px; border-radius:var(--radius-lg); border:1px solid var(--border); margin-bottom:32px;">
+          <div class="info-card">
             <h3 class="mb-16">Informazioni</h3>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-bottom:32px;">
-              <div><label class="small">Docente</label><div style="font-weight:600;">${note.professor || 'Non indicato'}</div></div>
-              <div><label class="small">Anno Accademico</label><div style="font-weight:600;">${note.academic_year || 'N.D.'}</div></div>
-              <div><label class="small">Anno Corso</label><div style="font-weight:600;">${note.year}° Anno</div></div>
-              <div><label class="small">Caricato da</label><div style="font-weight:600;">${note.uploader_name}</div></div>
+            <div class="info-grid">
+              <div><label class="small">Docente</label><div class="info-value">${note.professor || 'Non indicato'}</div></div>
+              <div><label class="small">Anno Accademico</label><div class="info-value">${note.academic_year || 'N.D.'}</div></div>
+              <div><label class="small">Anno Corso</label><div class="info-value">${note.year}° Anno</div></div>
+              <div><label class="small">Caricato da</label><div class="info-value">${note.uploader_name}</div></div>
             </div>
             <div class="mb-32"><h4>Descrizione</h4><p style="white-space: pre-wrap;">${note.description || 'Nessuna descrizione.'}</p></div>
-            ${note.table_of_contents ? `<div style="padding:24px; background:var(--bg); border-radius:var(--radius-md); border:1px dashed var(--border);"><h4>Indice</h4><p style="white-space: pre-wrap; font-size:0.875rem;">${note.table_of_contents}</p></div>` : ''}
+            ${note.table_of_contents ? `<div class="toc-container"><h4>Indice</h4><p style="white-space: pre-wrap; font-size:0.875rem;">${note.table_of_contents}</p></div>` : ''}
             <div class="mt-32"><h4>Tag</h4><div class="card-tags">${tagsHtml}</div></div>
           </div>
 
           <div id="comments-section" style="margin-top: 48px;">
             <h3 class="mb-24 flex items-center gap-12"><i data-lucide="message-square" style="width:24px;height:24px;color:var(--accent-alt);"></i> Discussioni (<span id="comments-count">${comments.length}</span>)</h3>
             <div id="comment-form-container" class="mb-40">
-              ${user ? `<div style="background:var(--bg-card); padding:24px; border-radius:var(--radius-md); border:1px solid var(--border);">
+              ${user ? `<div class="comment-form-card">
                   <div class="form-group mb-16"><label class="form-label">Lascia un commento</label><textarea id="comment-content" class="form-textarea" placeholder="Scrivi qui..."></textarea></div>
                   <div class="flex justify-between items-center">
                     <label class="flex items-center gap-8" style="cursor:pointer;"><input type="checkbox" id="is-errata"> <span class="small">Segnala <strong>Errata Corrige</strong></span></label>
                     <button id="submit-comment" class="btn btn-primary">Invia</button>
                   </div>
-                </div>` : `<div class="text-center" style="padding:32px; background:var(--bg-card); border-radius:var(--radius-md); border:1px solid var(--border);"><p class="small">Accedi per commentare.</p></div>`}
+                </div>` : `<div class="text-center auth-needed-card"><p class="small">Accedi per commentare.</p></div>`}
             </div>
             <div id="comments-list">${renderCommentsList(comments)}</div>
           </div>
         </div>
 
-        <div style="grid-column: span 4;">
-          <div style="position:sticky; top:100px;">
-            ${bundleFiles.length > 1 ? `<div style="background:var(--bg-card); padding:24px; border-radius:var(--radius-lg); border:1px solid var(--border); margin-bottom:24px;">
+        <div class="note-detail-sidebar">
+          <div class="sidebar-sticky">
+            ${bundleFiles.length > 1 ? `<div class="sidebar-card">
                 <h4 class="mb-16"><i data-lucide="layers" style="width:18px;height:18px;color:var(--accent-alt);"></i> Nel pacchetto</h4>
                 <div style="display:flex; flex-direction:column; gap:8px;">
                   ${bundleFiles.map(bf => `<a href="note-detail.html?id=${bf.id}" class="bundle-item ${bf.id == note.id ? 'active' : ''}" style="display:block; padding:12px; border-radius:var(--radius-sm); border:1px solid ${bf.id == note.id ? 'var(--accent-alt)' : 'var(--border)'}; background:${bf.id == note.id ? 'var(--accent-glow)' : 'transparent'}; text-decoration:none; color:inherit;">
@@ -150,9 +150,9 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
                 </div>
               </div>` : ''}
 
-            <div style="background:var(--bg-card); padding:24px; border-radius:var(--radius-lg); border:1px solid var(--border); margin-bottom:24px; text-align:center;">
+            <div class="sidebar-card rating-card">
               <h4 class="mb-16">Valutazione Community</h4>
-              <div id="avg-rating-display" style="font-size: 3rem; font-weight: 700; color: var(--text); line-height:1;">${note.rating > 0 ? parseFloat(note.rating).toFixed(1) : '--'}</div>
+              <div id="avg-rating-display" class="rating-number">${note.rating > 0 ? parseFloat(note.rating).toFixed(1) : '--'}</div>
               <p class="small" id="rating-count-display" style="margin:8px 0 24px 0;">Basato su ${note.rating_count || 0} voti</p>
               
               <div class="star-rating justify-center mb-16" id="interactive-rating">
