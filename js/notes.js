@@ -25,38 +25,49 @@ export const toggleSaveNote = async (e, noteId) => {
   }
 
   const btn = e.currentTarget;
-  const icon = btn.querySelector('i');
+  const icon = btn.querySelector('i, svg');
   const isCurrentlySaved = btn.classList.contains('saved');
 
   // Optimistic UI update
   if (isCurrentlySaved) {
     btn.classList.remove('saved');
-    icon.setAttribute('fill', 'none');
-    icon.style.color = 'var(--text-muted)';
+    if (icon) {
+      icon.setAttribute('fill', 'none');
+      icon.style.color = 'var(--text-muted)';
+    }
   } else {
     btn.classList.add('saved');
-    icon.setAttribute('fill', 'var(--accent-alt)');
-    icon.style.color = 'var(--accent-alt)';
+    if (icon) {
+      icon.setAttribute('fill', 'var(--accent-alt)');
+      icon.style.color = 'var(--accent-alt)';
+    }
   }
 
   try {
     if (isCurrentlySaved) {
-      await supabase.from('saved_notes').delete().match({ user_id: user.id, note_id: noteId });
+      const { error } = await supabase.from('saved_notes').delete().eq('user_id', user.id).eq('note_id', noteId);
+      if (error) throw error;
       window.Toast.info("Rimosso dai preferiti");
     } else {
-      await supabase.from('saved_notes').insert([{ user_id: user.id, note_id: noteId }]);
+      const { error } = await supabase.from('saved_notes').insert([{ user_id: user.id, note_id: noteId }]);
+      if (error) throw error;
       window.Toast.success("Salvato nei preferiti!");
     }
   } catch (err) {
+    console.error("Errore toggleSaveNote:", err);
     // Revert on error
     if (isCurrentlySaved) {
       btn.classList.add('saved');
-      icon.setAttribute('fill', 'var(--accent-alt)');
-      icon.style.color = 'var(--accent-alt)';
+      if (icon) {
+        icon.setAttribute('fill', 'var(--accent-alt)');
+        icon.style.color = 'var(--accent-alt)';
+      }
     } else {
       btn.classList.remove('saved');
-      icon.setAttribute('fill', 'none');
-      icon.style.color = 'var(--text-muted)';
+      if (icon) {
+        icon.setAttribute('fill', 'none');
+        icon.style.color = 'var(--text-muted)';
+      }
     }
     window.Toast.error("Errore nel salvataggio. Riprova.");
   }
@@ -150,7 +161,7 @@ export const createNoteCard = (note, savedNoteIds = [], currentUserId = null) =>
   card.className = 'note-card fade-up';
   card.setAttribute('data-area', note.area);
 
-  const isSaved = savedNoteIds.includes(note.id);
+  const isSaved = savedNoteIds.map(String).includes(String(note.id));
   const saveClass = isSaved ? 'saved' : '';
   const saveIconFill = isSaved ? 'var(--accent-alt)' : 'none';
   const saveIconColor = isSaved ? 'var(--accent-alt)' : 'var(--text-muted)';
@@ -166,10 +177,10 @@ export const createNoteCard = (note, savedNoteIds = [], currentUserId = null) =>
     const safeTitle = note.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
     adminActionsHtml = `
       <div style="display:flex;gap:8px;margin-top:14px;border-top:1px dashed var(--border);padding-top:14px;">
-        <button onclick="editNote(event, ${note.id}, '${safeTitle}')" class="btn btn-secondary btn-sm" style="flex:1;">
+        <button onclick="editNote(event, '${note.id}', '${safeTitle}')" class="btn btn-secondary btn-sm" style="flex:1;">
           <i data-lucide="edit-2" style="width:14px;height:14px;"></i> Rinomina
         </button>
-        <button onclick="deleteNote(event, ${note.id}, '${note.file_url}')" class="btn btn-secondary btn-sm" style="flex:1;color:#EF4444;border-color:rgba(239,68,68,0.3);">
+        <button onclick="deleteNote(event, '${note.id}', '${note.file_url}')" class="btn btn-secondary btn-sm" style="flex:1;color:#EF4444;border-color:rgba(239,68,68,0.3);">
           <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Elimina
         </button>
       </div>
@@ -201,7 +212,7 @@ export const createNoteCard = (note, savedNoteIds = [], currentUserId = null) =>
           &middot; <i data-lucide="history" style="width:12px;height:12px;vertical-align:middle;"></i> ${note.academic_year || 'A.A. N.D.'}
         </div>
       </div>
-      <button class="save-btn ${saveClass}" onclick="toggleSaveNote(event, ${note.id})" title="Salva nei preferiti">
+      <button class="save-btn ${saveClass}" onclick="toggleSaveNote(event, '${note.id}')" title="Salva nei preferiti">
         <i data-lucide="bookmark" style="width:20px;height:20px;color:${saveIconColor};" fill="${saveIconFill}"></i>
       </button>
     </div>

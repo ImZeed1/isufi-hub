@@ -158,7 +158,7 @@ const initProfile = async () => {
       if (!favoritesGrid) return;
 
       const { data: savedIds } = await supabase.from('saved_notes').select('note_id').eq('user_id', user.id);
-      const ids = savedIds ? savedIds.map(s => s.note_id) : [];
+      const ids = savedIds ? savedIds.map(s => String(s.note_id)) : [];
 
       // Aggiorna il contatore nelle stats
       const countSavedEl = document.getElementById('count-saved');
@@ -182,7 +182,7 @@ const initProfile = async () => {
       if (!uploadsGrid) return;
 
       const { data: savedIds } = await supabase.from('saved_notes').select('note_id').eq('user_id', user.id);
-      const ids = savedIds ? savedIds.map(s => s.note_id) : [];
+      const ids = savedIds ? savedIds.map(s => String(s.note_id)) : [];
 
       const { data: myUploads } = await supabase.from('notes').select('*').eq('uploader_id', user.id);
 
