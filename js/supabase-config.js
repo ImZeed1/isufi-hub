@@ -8,6 +8,14 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 // Inizializziamo il client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Funzione helper per ottenere l'URL corretto per i redirect (gestisce locale e produzione)
+export const getURL = () => {
+  let url = window.location.origin;
+  // Assicurati che finisca con /
+  url = url.charAt(url.length - 1) === '/' ? url : `${url}/`;
+  return url;
+};
+
 // Funzione helper per verificare se l'utente è loggato
 export async function getCurrentUser() {
   const { data: { user } } = await supabase.auth.getUser()
