@@ -1,4 +1,4 @@
-const CACHE_NAME = 'isufi-hub-v2';
+const CACHE_NAME = 'isufi-hub-v3';
 const ASSETS = [
   '/',
   '/index.html',
