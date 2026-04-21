@@ -278,8 +278,6 @@ const renderDetail = (note, comments, bundleFiles, user, userProfile, userRating
       </div>
     </div>
   `;
-    </div>
-  `;
 
   if (typeof lucide !== 'undefined') lucide.createIcons();
   setupEventListeners(note, user, userProfile, userRating);
